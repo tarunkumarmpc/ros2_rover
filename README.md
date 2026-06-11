@@ -3,7 +3,7 @@
 ![ROS 2](https://img.shields.io/badge/ROS_2-Jazzy-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
 
-![Rover Kinematics & Lifts Animation](video/rover_animation.webp)
+![Rover Kinematics & Lifts Animation](video/rover_animation.mp4)
 
 ROS 2 workspace for mecanum base control and lift actuation. Integrates CAN-bus hardware interfaces, kinematic velocity smoothing, and web-based teleoperation.
 
