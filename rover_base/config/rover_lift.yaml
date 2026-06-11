@@ -1,0 +1,27 @@
+#rover_lift
+
+# Parameters for node launched with namespace `/rover`
+rover:
+  lift_control:
+    ros__parameters:
+      can_tx_id: 272
+      can_rx_base_id: 528
+      max_height: 0.16
+      min_height: 0.0
+      movement_timeout: 30.0
+      height_tolerance: 0.001
+      default_speed: 10.0
+
+# Parameters for node launched without a namespace
+
+
+# lift_control:
+#   ros__parameters:
+#     can_tx_id: 272              # 0x110
+#     can_rx_base_id: 528         # 0x210
+#     max_height: 0.16
+#     min_height: 0.0
+#     movement_timeout: 30.0
+#     height_tolerance: 0.0001
+#     default_speed: 10.0
+

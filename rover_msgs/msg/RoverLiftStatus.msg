@@ -1,0 +1,3 @@
+#RoverLiftStatus.msg
+LiftData[] data
+

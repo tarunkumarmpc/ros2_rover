@@ -1,0 +1,41 @@
+
+# Node launched with name 'rover_wheel_node' under namespace '/rover'
+rover:
+  wheel_control:
+    ros__parameters:
+      wheel_radius: 0.05 #metres
+      lx: 0.305 #metres 
+      ly: 0.161 #metres
+
+      wheel_vel_scale: 1000.0
+      can_id_wheel_vel: 256
+      can_id_enable: 257
+      can_id_feedback: 512
+
+      use_vel_smoothing: true
+      accel_smooth_duration: 0.3
+      decel_smooth_duration: 0.3
+      cmd_vel_timeout: 0.5
+      vel_threshold: 0.0005
+      control_rate: 10.0
+
+# Node launched with name 'rover_wheel_node' without namespace
+
+
+# wheel_control:
+#   ros__parameters:
+#     wheel_radius: 0.05
+#     lx: 0.15
+#     ly: 0.15
+
+#     wheel_vel_scale: 1000.0
+#     can_id_wheel_vel: 256
+#     can_id_enable: 257
+#     can_id_feedback: 512
+
+#     use_vel_smoothing: true
+#     accel_smooth_duration: 0.3
+#     decel_smooth_duration: 0.3
+#     cmd_vel_timeout: 0.5
+#     vel_threshold: 0.0005
+#     control_rate: 10.0

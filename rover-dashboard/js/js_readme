@@ -1,0 +1,7 @@
+<div class="camera-feed-container">
+  <img id="camera-feed" alt="Robot camera feed (compressed)" />
+  <video id="camera-feed-video" autoplay playsinline class="w-full h-auto" alt="Robot camera feed (WebRTC)"></video>
+</div>
+ 
+ 
+ replace this tag for the webrtc and make sure the ports and other stuff are fine

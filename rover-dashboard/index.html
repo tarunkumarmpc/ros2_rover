@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Rover Contributors Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <!-- Login Page -->
+  <div id="login-page">
+    <form id="login-form" class="login-form">
+      <h2>Login to Dashboard</h2>
+      <input type="text" id="login-username" placeholder="Username" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div id="login-error" class="hidden">Invalid username or password</div>
+    </form>
+  </div>
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none;">
+    <header>
+      <div style="display:flex;align-items:center;width:100%;gap:2rem;">
+        <!-- Left: Company Name + ROS Status -->
+        <div style="display:flex;align-items:center;gap:1.2rem;">
+          <span style="font-size:2rem;font-weight:bold;letter-spacing:-1px;color:#2563eb;white-space:nowrap;">
+            Rover Contributors
+          </span>
+          <div>
+            <div id="ros-status" style="display:flex;align-items:center;gap:0.5rem;">
+              <span id="ros-status-indicator"></span>
+              <span id="ros-status-text">Connecting...</span>
+            </div>
+            <div id="rover-status" style="display:flex;align-items:center;gap:0.5rem;margin-top:0.2em;">
+              <span id="rover-status-indicator"></span>
+              <span id="rover-status-text">Waiting for rover...</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1;"></div>
+        <!-- Center: Mode Controls -->
+        <div class="mode-header" style="display:flex;align-items:center;gap:0.7rem;">
+          <span style="font-weight:600;color:#2563eb;">Mode:</span>
+          <button id="manual-btn" class="mode-btn active" type="button">Manual</button>
+          <button id="auto-btn" class="mode-btn" type="button">Autonomous</button>
+          <span id="mode-status" style="color:#eceff3;font-size:0.98rem;">
+            (<span id="mode-current">Manual</span>)
+          </span>
+        </div>
+        <div style="flex:1;"></div>
+        <!-- Right: Controls and User Info -->
+        <button id="debug-toggle" class="debug-toggle" type="button">Debug Mode</button>
+        <button id="control-toggle" class="send-btn control-toggle" type="button">Drone</button>
+
+        <span>Logged in as <strong id="user-display">operator</strong></span>
+      </div>
+    </header>
+    <main>
+      <!-- Left Panel -->
+      <section class="left-panel">
+        <div class="card camera-feed-card">
+          <div class="camera-feed-header">
+            <h2>Camera Feed</h2>
+            <select id="camera-select">
+              <option value="front">Front Camera</option>
+              <option value="back">Back Camera</option>
+            </select>
+          </div>
+          <div class="camera-feed-container">
+            <button id="camera-refresh-btn" class="send-btn"
+              style="position: absolute; top: 10px; right: 10px; z-index: 2;">
+              Refresh
+            </button>
+            <img id="camera-feed" src="" alt="Camera Feed">
+          </div>
+        </div>
+
+        <div id="rosout-log-card" class="debug-panel">
+          <h3>ROSOUT Log</h3>
+          <ul id="rosout-log"></ul>
+        </div>
+        <!-- Split Activity Log and Connected Clients side by side -->
+        <div id="activity-log-card" class="debug-panel">
+          <div style="display: flex; gap: 1rem; height: 100%;">
+            <!-- Activity Log Column -->
+            <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+              <h3 style="margin-bottom: 0.5em;">Activity Log</h3>
+              <ul id="activity-log" style="flex: 1 1 0; min-width: 0; overflow-y: auto; max-height: 200px; margin: 0;">
+              </ul>
+            </div>
+            <!-- Connected Clients Column -->
+            <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+              <h3 style="margin-bottom: 0.5em;">Connected Clients</h3>
+              <div id="client-summary"></div>
+              <div id="client-list" style="flex: 1 1 0; min-width: 0; overflow-y: auto; max-height: 200px; margin: 0;">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="metrics-card" class="debug-panel">
+          <h3 style="margin-bottom:0.1em;font-size:1em;">System Metrics</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:0.7em;">
+            <span style="color:#10b981;font-size:0.90em;">🔋 <span id="battery-status">--%</span></span>
+            <span style="color:#4f46e5;font-size:0.90em;">💻 <span id="cpu-status">--%</span></span>
+            <span style="color:#2563eb;font-size:0.90em;">🌐 <span id="network-status">-- Mbps</span></span>
+          </div>
+        </div>
+      </section>
+      <!-- Right Panel -->
+      <section class="right-panel">
+        <!-- Joystick Control Card -->
+        <div class="card">
+          <h2>Joystick Control</h2>
+          <label for="velocity-scale">Scale: <span id="velocity-scale-value">1.0</span></label>
+          <input type="range" id="velocity-scale" min="0" max="5" step="0.1" value="1.0" />
+          <div style="display:flex; justify-content:center; margin:1rem 0;">
+            <div id="joystick-zone"></div>
+          </div>
+          <div id="joystick-status" style="text-align:center; font-weight:500;">Idle</div>
+        </div>
+        <!-- Lift Controls Card -->
+        <div class="card">
+          <h2>Lift Controls</h2>
+
+          <!-- Rover Lift Control -->
+          <div class="lift-control-block" style="margin-bottom: 1.5em;">
+            <h3 style="margin-bottom: 0.7em;">Rover Lift</h3>
+            <div class="lift-row">
+              <input id="rover-lift-slider" type="range" min="0" max="0.11" step="0.001" value="0"
+                aria-label="Set rover lift target height" />
+              <button id="rover-lift-send-btn" class="send-btn">Send</button>
+            </div>
+            <div class="lift-stats">
+              <span class="stat-label">Target:</span>
+              <span id="rover-lift-target" class="stat-value">0.000</span> m
+              <button id="rover-lift-toggle-btn" class="debug-toggle" style="margin-left: 1em;">Show All</button>
+            </div>
+            <div id="rover-lift-actual-avg-block" class="lift-stats">
+              <span class="stat-label">Actual (avg):</span>
+              <span id="rover-lift-actual-avg" class="stat-value">--</span> m
+            </div>
+            <div id="rover-lift-actual-all-block" class="lift-stats hidden">
+              <div class="lift-actual-grid">
+                <div><span class="stat-value">FL:</span> <span id="rover-lift-actual-fl" class="stat-value">--</span>
+                </div>
+                <div><span class="stat-value">FR:</span> <span id="rover-lift-actual-fr" class="stat-value">--</span>
+                </div>
+                <div><span class="stat-value">RL:</span> <span id="rover-lift-actual-rl" class="stat-value">--</span>
+                </div>
+                <div><span class="stat-value">RR:</span> <span id="rover-lift-actual-rr" class="stat-value">--</span>
+                </div>
+              </div>
+              <span>m</span>
+            </div>
+          </div>
+
+          <!-- Camera Lift Control -->
+          <div class="lift-control-block">
+            <h3 style="margin-bottom: 0.7em;">Camera Lift</h3>
+            <div class="lift-row">
+              <input type="range" id="camera-lift-slider" min="0.0" max="0.2" step="0.001" value="0.0" />
+              <button id="camera-lift-send-btn" class="send-btn">Send</button>
+            </div>
+            <div class="lift-stats">
+              <span class="stat-label">Target:</span>
+              <span id="camera-lift-target" class="stat-value">0.000</span> m
+            </div>
+            <div class="lift-stats">
+              <span class="stat-label">Actual:</span>
+              <span id="camera-lift-actual" class="stat-value">--</span> m
+            </div>
+          </div>
+        </div>
+
+
+      </section>
+    </main>
+  </div>
+  <!-- Control Layout Overlay -->
+  <div id="control-layout" class="hidden control-overlay">
+    <div class="control-content">
+      <h2>Control Mode Active</h2>
+      <p>This is a dummy layout for Control Mode.<br>Add your control widgets or info here.</p>
+      <button class="send-btn" id="control-drone-btn">🛸 Control Rover</button>
+    </div>
+  </div>
+
+  <script src="js/libs/roslib.min.js"></script>
+  <script src="js/libs/nipplejs.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ros.js"></script>
+  <script src="js/joystick.js"></script>
+  <script src="js/status.js"></script>
+  <script src="js/rover_status.js"></script>
+  <script src="js/lift_control.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+
+</html>

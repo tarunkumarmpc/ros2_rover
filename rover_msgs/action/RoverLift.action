@@ -1,0 +1,13 @@
+# RoverLift.action
+# Action to control the rover lift plate
+
+# Request
+float64 height # Target height for the lift
+---
+# Result
+bool success # Indicates successful movement of lift
+string message # Status or error message for the client
+---
+# Feedback
+float64 current_height # Current height of lift 
+

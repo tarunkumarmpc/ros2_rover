@@ -1,0 +1,22 @@
+# Node named 'rover_camera_lift' under '/rover' namespace
+
+rover:
+  camera_lift_control:
+    ros__parameters:
+      can_tx_id: 288
+      can_rx_id: 544
+      max_height: 0.2
+      tolerance: 0.005
+      control_rate: 10.0
+
+# Node named 'rover_camera_lift' without namespace
+
+# camera_lift_control:
+#   ros__parameters:
+#     can_tx_id: 288
+#     can_rx_id: 544
+#     max_height: 0.2
+#     tolerance: 0.006
+#     control_rate: 10.0
+
+
